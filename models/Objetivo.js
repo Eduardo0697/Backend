@@ -11,12 +11,22 @@ const schemaObjetivo = new mongoose.Schema({
     },
     description: {
         type: String,
-        required: true
+    },
+
+    obstacles:{
+        type:String,
     },
     typeObjective: {
         type: String,
-        enum: ['pequeño', 'mediano', 'grande']  //Con este decimos que solo se puede escribir alguna de estas opciones
+        enum: ['academic', 'professional', 'fitness', "mind", "social", "cultural", "relationship"] 
+                                                          
     },
+
+    lenght: {
+        type:String,
+        enum: ["short", "medium", "long"]
+    },
+
     tasks :{
         type: [ {
             taskTitle: {
@@ -28,13 +38,23 @@ const schemaObjetivo = new mongoose.Schema({
                 required: true,
             },
             importance: {
-                type: String,
+                type:Number,
+                min:1,
+                max:3,
                 required: true,
             },
             frequency: {
                 type: String,
+                enum:['once', 'everyday', 'everyWeek', 'monday', 'tuesday', 
+                'wednesday', 'thursday', 'friday', 'saturday', 'sunday'],
+                required: true,
+            },
+
+            isAcomplished:{
+                type:Boolean,
                 required: true,
             }
+
         }]
     }
 });
