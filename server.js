@@ -235,6 +235,15 @@ app.get('/objetivos/usuario/tasks/:task', (req, res) => {
         })
 });
 
+//DELETE
+/**
+ * Operaciones DELETE
+ * 1.- Eliminar un objetivo completo con todas sus tareas
+ * 2.- Eliminar una tarea especifica de un objetivo
+ */
+
+
+
 
 app.listen(4000, () => {    
     console.log('Server on')
