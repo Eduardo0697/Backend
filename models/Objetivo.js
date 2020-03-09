@@ -26,7 +26,10 @@ const schemaObjetivo = new mongoose.Schema({
         type:String,
         enum: ["short", "medium", "long"]
     },
-
+    isCompleted:{
+        type:Boolean,
+        required: true,
+    },
     tasks :{
         type: [ {
             taskTitle: {

@@ -22,11 +22,13 @@ app.get('/', (request, response) => {
  * 
  * PATCH /objetivos/usuario/tasks
  * PATCH /objetivos/usuario/objetivo
+ * PATCH /objetivos/usuario/tasks/:task
  * 
  * GET  /objetivos
  * GET  /objetivos/usuario
  * GET  /objetivos/usuario/objetivo
  * GET  /objetivos/usuario/tasks    *Pensar en cambiar a /objetivos/usuario/objetivo/tasks
+ * GET  /objetivos/usuario/tasks/:task
  */
 
 //CRUD para objetivos
@@ -49,6 +51,7 @@ app.post('/objetivos/:email', (req, res) => {
         obstacles: req.body.obstacles,
         typeObjective: req.body.typeObjective,
         length: req.body.length,
+        isCompleted : false,
         tasks : req.body.tasks,
     })
 
@@ -67,8 +70,8 @@ app.post('/objetivos/:email', (req, res) => {
  * 1.- Añadir una tarea a un objetivo especifico (Actualizacion de objetivo)
  * 2.- Actualizar Info General de un Objetivo especifico
  * 3.- Actualizar una tarea especifica de un objetivo especifico
- * 4.- Marcar una tarea como completada
- * 5.- Marcar tarea como no completada
+ * 4.- Marcar una tarea como completada - Con 3.- se puede actualizar
+ * 5.- Marcar tarea como no completada- 3. se puede actualizar
  * 6.- Marcar Objetivo como completado*
  */
 
@@ -103,6 +106,28 @@ app.patch('/objetivos/usuario/tasks', (req, res) => {
 
 });
 
+ // 3.-
+ app.patch('/objetivos/usuario/tasks/:task', (req, res) => {
+    console.log(req.query);
+    console.log(req.params);
+    console.log(req.body)
+    const task = req.params.task;
+    const  { email, idObj }  = req.query;
+    const set =  {};
+    Object.entries(req.body).forEach( ([key, value]) =>{
+        set['tasks.$.' + key] = value;
+    })
+    Objetivo.findOneAndUpdate({ _id: idObj, emailAssociated: email, "tasks._id" : task} , { $set : set}, {new : true}).exec() 
+        .then( (objetivo) => {
+            res.send(objetivo)
+            console.log('Exito')
+        })
+        .catch( (err) => {
+            res.status(409).send(err)
+        })
+
+});
+
 /*
 
 
@@ -127,6 +152,7 @@ app.patch('/users/:id', (req, res) => {
  * 2.- Retorna los objetivos asociados a un usuario especifico via email
  * 3.- Retorna un objetivo especifico segun su id por email como autenticacion
  * 4.- Retorna las tareas asociadas a un objetivo especifico con email como autenticacion
+ * 5.- Retrorna una tarea especifica de un objetivo con email como autenticacion
  */
 
 
@@ -189,5 +215,27 @@ app.get('/objetivos/usuario/tasks', (req, res) => {
 });
 
 app.listen(3000, () => {    
+    console.log('Server on')
+});
+
+//5.- Retorna una tarea especifica de un objetivo con email como autenticacion
+app.get('/objetivos/usuario/tasks/:task', (req, res) => {
+    console.log(req.query);
+    console.log(req.params);
+    const  { email, idObj }  = req.query;
+    const task = req.params.task;
+    Objetivo.findOne({ emailAssociated: email, _id: idObj})
+        .exec()
+        .then( (objetivo) => {
+            if(objetivo) res.status(200).send(objetivo.tasks.id(task))
+            else res.status(404).send({ message : 'Not found'})
+        })
+        .catch( (err) => {
+            res.status(400).send(err)
+        })
+});
+
+
+app.listen(4000, () => {    
     console.log('Server on')
 });
