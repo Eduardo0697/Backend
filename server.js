@@ -239,6 +239,22 @@ app.get('/objetivos/usuario/tasks/:task', (req, res) => {
  * 2.- Eliminar una tarea especifica de un objetivo
  */
 
+ //1.-
+ app.delete('/objetivos/usuario/objetivo/:idObj', (req, res) =>{
+    const idObj = req.params.idObj;
+    const  { email }  = req.query;
+    
+    Objetivo.deleteOne({ _id: idObj, emailAssociated: email }).exec()
+    .then(Objetivo => {
+         res.status(200).send(Objetivo)
+    })
+    .catch( (err) => {
+        res.status(400).send(err)
+    })
+    
+});
+
+ //2.-
 app.delete('/objetivos/usuario/tasks/:task', (req, res) =>{
     const task = req.params.task;
     const  { email, idObj }  = req.query;
@@ -246,7 +262,8 @@ app.delete('/objetivos/usuario/tasks/:task', (req, res) =>{
         '$pull': {
             'tasks':{ '_id': task }
         }
-    })
+    },
+    {new : true})
     .exec()
     .then(objetivoUpdated => {
         if(objetivoUpdated) res.status(200).send(objetivoUpdated)
