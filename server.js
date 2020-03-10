@@ -214,9 +214,6 @@ app.get('/objetivos/usuario/tasks', (req, res) => {
         })
 });
 
-app.listen(3000, () => {    
-    console.log('Server on')
-});
 
 //5.- Retorna una tarea especifica de un objetivo con email como autenticacion
 app.get('/objetivos/usuario/tasks/:task', (req, res) => {
@@ -242,9 +239,25 @@ app.get('/objetivos/usuario/tasks/:task', (req, res) => {
  * 2.- Eliminar una tarea especifica de un objetivo
  */
 
+app.delete('/objetivos/usuario/tasks/:task', (req, res) =>{
+    const task = req.params.task;
+    const  { email, idObj }  = req.query;
+    Objetivo.findOneAndUpdate({ emailAssociated: email, _id: idObj}, {
+        '$pull': {
+            'tasks':{ '_id': task }
+        }
+    })
+    .exec()
+    .then(objetivoUpdated => {
+        if(objetivoUpdated) res.status(200).send(objetivoUpdated)
+        else res.status(404).send({ message : 'Not found'})
+    })
+    .catch( (err) => {
+        res.status(400).send(err)
+    })
+    
+});
 
-
-
-app.listen(4000, () => {    
+app.listen(3000, () => {    
     console.log('Server on')
 });
