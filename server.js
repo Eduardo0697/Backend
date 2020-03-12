@@ -4,6 +4,8 @@ const { Objetivo} = require('./models/index')
 
 const app = express();
 
+const PORT = process.env.PORT || 3000;  //Toma la variable del sistema operativo
+
 //Para poder aceptar body a traves de las peticiones se añade lo siguiente
 app.use(express.urlencoded({extended: true}));
 app.use(express.json())
@@ -275,6 +277,6 @@ app.delete('/objetivos/usuario/tasks/:task', (req, res) =>{
     
 });
 
-app.listen(3000, () => {    
+app.listen(PORT, () => {    
     console.log('Server on')
 });
