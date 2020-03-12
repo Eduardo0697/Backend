@@ -1,6 +1,7 @@
 const express = require('express')
 //const { User, Perro } = require('./models')
 const { Objetivo} = require('./models/index')
+const cors = require('cors')
 
 const app = express();
 
@@ -9,6 +10,7 @@ const PORT = process.env.PORT || 3000;  //Toma la variable del sistema operativo
 //Para poder aceptar body a traves de las peticiones se añade lo siguiente
 app.use(express.urlencoded({extended: true}));
 app.use(express.json())
+app.use(cors())
 
 app.get('/', (request, response) => {
     response.send('HOLA');
