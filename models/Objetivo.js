@@ -22,7 +22,7 @@ const schemaObjetivo = new mongoose.Schema({
                                                           
     },
 
-    lenght: {
+    length: {
         type:String,
         enum: ["short", "medium", "long"]
     },
