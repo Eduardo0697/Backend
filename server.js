@@ -157,8 +157,27 @@ app.patch('/users/:id', (req, res) => {
  * 3.- Retorna un objetivo especifico segun su id por email como autenticacion
  * 4.- Retorna las tareas asociadas a un objetivo especifico con email como autenticacion
  * 5.- Retrorna una tarea especifica de un objetivo con email como autenticacion
+ * 6.- Retorna todas las tareas de un usuario
  */
 
+//6.
+app.get('/objetivos/tasks/:email', (req, res) => {
+    const  { email }  = req.params;
+    Objetivo.find({ emailAssociated: email }).exec()
+        .then( (objetivos) => {
+            if(objetivos){
+                const arrayTasks = [];
+
+                console.log(objetivos.length())
+
+                res.status(200).send(objetivos)
+            } 
+            else res.status(404).send({ message : 'Not found'})
+        })
+        .catch( (err) => {
+            res.status(400).send(err)
+        })
+});
 
 
 //Retorna todos los objetivos en la BD sin importar el usuario
