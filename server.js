@@ -162,15 +162,24 @@ app.patch('/users/:id', (req, res) => {
 
 //6.
 app.get('/objetivos/tasks/:email', (req, res) => {
+    console.log('Nueva Peticion')
     const  { email }  = req.params;
     Objetivo.find({ emailAssociated: email }).exec()
         .then( (objetivos) => {
             if(objetivos){
                 const arrayTasks = [];
 
-                console.log(objetivos.length())
+                console.log(objetivos.length)
+                for(var i=0; i < objetivos.length ; i++){
+                    //console.log(objetivos[i].tasks)
+                    for(var j=0; j < objetivos[i].tasks.length ; j++){
+                        arrayTasks.push(objetivos[i].tasks[j])
+                    }
+                }
 
-                res.status(200).send(objetivos)
+                console.log(arrayTasks)
+
+                res.status(200).send(arrayTasks)
             } 
             else res.status(404).send({ message : 'Not found'})
         })
