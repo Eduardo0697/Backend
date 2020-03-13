@@ -173,7 +173,19 @@ app.get('/objetivos/tasks/:email', (req, res) => {
                 for(var i=0; i < objetivos.length ; i++){
                     //console.log(objetivos[i].tasks)
                     for(var j=0; j < objetivos[i].tasks.length ; j++){
-                        arrayTasks.push(objetivos[i].tasks[j])
+                        //console.log(`IDOBJETIVO:${objetivos[i]._id}`)
+                        const object = {
+                            idGoal : objetivos[i]._id,
+                            emailAssociated: objetivos[i].emailAssociated,
+                            _id: objetivos[i].tasks[j]._id,
+                            taskTitle: objetivos[i].tasks[j].taskTitle,
+                            description: objetivos[i].tasks[j].description,
+                            importance: objetivos[i].tasks[j].importance,
+                            frequency: objetivos[i].tasks[j].frequency,
+                            isAcomplished: objetivos[i].tasks[j].isAcomplished
+                        }
+                        //console.log(object);
+                        arrayTasks.push(object)
                     }
                 }
 
